@@ -1,0 +1,21 @@
+node {
+    withInfisical(
+        configuration: [
+            infisicalProjectSlug: 'test', 
+            infisicalEnvironmentSlug: 'dev',
+            infisicalCredentialId: 'be87f5d7-c1dc-4d21-a12e-459c378e0de9,
+            infisicalUrl: 'http://192.168.56.100:8080' 
+        ], 
+        infisicalSecrets: [
+            infisicalSecret(
+                includeImports: true, 
+                path: '/', 
+                secretValues: [
+                    [infisicalKey: 'JENKINS_INJECTION'],
+                ]
+            )
+        ]
+    ) {
+        sh "printenv"
+    }     
+}

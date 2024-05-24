@@ -1,0 +1,28 @@
+# CyberArk Conjur variabelen
+variables:
+  CONJUR_ACCOUNT: "test"
+  CONJUR_APPLIANCE_URL: "https://192.168.56.100:8080"
+  CONJUR_AUTHN_API_KEY: "57ebc32f71dcf428d03of17c87295b42e5f05475bc579a5b2381953c9725c3fc"
+  CONJUR_AUTHN_LOGIN:   "admin"
+
+# Installeer CLI op python image
+install:
+  stage: build
+  image: alpine:3.15 # Use an appropriate base image
+  script:
+    - apk add --no-cache curl jq
+    - curl -o /usr/local/bin/conjur https://github.com/cyberark/conjur-api-python3/releases/latest/download/conjur
+    - chmod +x /usr/local/bin/conjur
+    - conjur init -u $CONJUR_APPLIANCE_URL -a $CONJUR_ACCOUNT
+    - conjur authn login -u $CONJUR_AUTHN_LOGIN -p $CONJUR_AUTHN_API_KEY
+
+# Doe secrets injection
+inject:
+  stage: build
+  script:
+    - export CONJUR_INJECTION=$(conjur variable value secret/CONJUR)
+    - export API_KEY=$(conjur variable value api/key)
+    - export SECRET_KEY=$(conjur variable value secret/key)
+    - echo "Fetched secrets from Conjur"
+
+

@@ -1,0 +1,12 @@
+- !policy
+  id: gitlab
+  body:
+    - !layer
+    - !host
+      id: gitlab-runner
+
+    - !grant
+      roles:
+        - !layer
+      members:
+        - !host gitlab-runner

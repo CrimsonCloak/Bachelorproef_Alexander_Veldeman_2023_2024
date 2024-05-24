@@ -1,0 +1,8 @@
+node {
+    stage('Build') {
+    withCredentials([conjurSecretCredential(credentialsId: 'CYBERARK_SECRET', 
+        variable: 'CYBERARK_INJECTION')]) {
+        echo  $CYBERARK_INJECTION
+    }
+    }
+}

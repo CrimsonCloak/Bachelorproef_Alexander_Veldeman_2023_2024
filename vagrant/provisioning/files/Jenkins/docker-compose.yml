@@ -1,0 +1,7 @@
+services:
+    jenkins:
+        ports:
+            - '9001:8080'
+        container_name: jenkins
+        image: 'jenkins/jenkins:lts'
+        restart: always

@@ -1,0 +1,13 @@
+services:
+    puppet-server:
+        container_name: puppet
+        image:  voxpupuli/container-puppetserver
+        restart: always
+    puppet-agent:
+        # ports:
+        #     - '9001:8080'
+        container_name: puppet-agent
+        image: 'puppet/puppet-agent-alpine'
+        restart: always
+    
+    # See https://github.com/voxpupuli/crafty/blob/main/puppet/oss/compose.yaml

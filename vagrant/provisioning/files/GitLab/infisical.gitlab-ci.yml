@@ -1,0 +1,23 @@
+    stages:
+    - build
+
+    variables:
+      INFISCAL_URL: 'http://192.168.56.100:8080' 
+      INFISICAL_CLIENT_ID: $INFISICAL_CLIENT_ID
+      INFISICAL_CLIENT_SECRET: $INFISICAL_CLIENT_SECRET
+      INFISCAL_PROJECT_SLUG: 'test'
+      INFISCAL_ENVIRONMENT_SLUG: 'dev'
+      SECRET_PATH: '/'
+      SECRET_KEY: 'GITLAB_INJECTION'
+
+    before_script:
+      - apt-get update && apt-get install -y curl
+      - curl -fsSL https://cli.infisical.com/install.sh | sh
+      - export PATH=$PATH:/usr/local/bin  # Voeg Infisical CLI toe aan de PATH variabele
+    
+    build:
+      stage: build
+      script:
+        - infisical login --method=universal-auth --client-id $INFISICAL_CLIENT_ID --client-secret $INFISICAL_CLIENT_SECRET
+        - export GITLAB_INJECTION=$(infisical run --path $SECRET_PATH --key $GITLAB_INJECTION  --projectId $INFISCAL_PROJECT_SLUG --env $INFISCAL_ENVIRONMENT_SLUG --url $INFISCAL_URL)
+        - echo $GITLAB_INJECTION

@@ -1,0 +1,29 @@
+pipeline {
+agent any
+
+stages {
+    stage('Maak een nieuwe secret') {
+        steps {
+            script {
+                // Authenticatie
+                sh 'bao login s.U2DQGOqjyt1kPf6bkYd0vJjM'
+                
+                // Creatie
+                sh 'bao kv put secret/OPENBAO_INJECTION value=TestOpenBao'
+            }
+        }
+    }
+    stage('Uitlezen van secret') {
+        steps {
+            script {
+                env.OPENBAO_INJECTION = sh(script: 'bao read -field=value secret/OPENBAO_INJECTION', returnStdout: true).trim()
+            }
+        }
+    }
+    stage('Build') {
+        steps {
+            sh 'echo $OPENBAO_INJECTION'
+        }
+    }
+}
+}

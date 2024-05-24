@@ -1,0 +1,19 @@
+    stages:
+      - build
+
+    variables:
+      VAULT_ADDR: 'http://192.168.56.100:8200'
+      VAULT_TOKEN: 's.U2DQGOqjyt1kPf6bkYd0vJjM'          
+      SECRET_PATH: 'secret/OPENBAO_INJECTION'                       
+
+    build:
+      stage: build
+      script:
+        # Authenticatie
+      - bao login -method=token -token=$VAULT_TOKEN
+        # Injecten van secret
+      - SECRET=$(bao kv get -field=value $SECRET_PATH)
+        # Inject de secret in de GitLab CI/CD
+      - export OPENBAO_INJECTION="$SECRET"
+        # Print de waarde van de secret
+      - echo " $OPENBAO_INJECTION"
